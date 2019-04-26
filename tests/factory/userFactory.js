@@ -15,12 +15,19 @@ exports.deleteUserTest = async function (id) {
         console.log(error);
     }
 }
+
 /**
  * @param  {string} id
+ * @param  {boolean} createTestUser
  */
-exports.getUser = async function (id) {
+exports.getUser = async function (id, createTestUser) {
 
-    if( typeof id === 'string' && id) {
+    if (createTestUser) {
+        const u = new User({});
+        return await u.save();
+    }
+
+    if (typeof id === 'string' && id) {
         return await User.findById(id);
     }
 

@@ -6,7 +6,8 @@ const Action = require('./actions');
 class CustomPage {
     static async build() {
         const browser = await puppeteer.launch({
-            headless: false
+            headless: false,
+            args: ['--no-sandbox']
         });
 
         const page = await browser.newPage();
@@ -24,13 +25,13 @@ class CustomPage {
         this.page = page;
     }
     async login() {
-        const user = await userFactory.getUser('5cbade4a564e06ee834f7808');
+        const user = await userFactory.getUser('5cbade4a564e06ee834f7808', true);
 
         const { sessionString, sig } = sessionFactory(user._id);
 
         await this.page.setCookie({ name: 'session', value: sessionString });
         await this.page.setCookie({ name: 'session.sig', value: sig });
-        await this.page.goto('localhost:3000');
+        await this.page.goto('http://localhost:3000');
         await this.page.waitFor('a[href="/auth/logout"]', el => el.innerHTML);
     }
     async getInnerHtmlOf(selector) {
